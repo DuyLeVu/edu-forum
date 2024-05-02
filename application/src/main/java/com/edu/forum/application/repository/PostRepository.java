@@ -2,6 +2,7 @@ package com.edu.forum.application.repository;
 
 import com.edu.forum.application.model.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
     @Modifying
     @Query(value = "select * from Post where status = 1 order by id desc limit ?1,5;", nativeQuery = true)
     Iterable<Post> getAllPostByIndex(int index);

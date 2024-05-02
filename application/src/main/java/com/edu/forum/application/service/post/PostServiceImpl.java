@@ -1,5 +1,7 @@
 package com.edu.forum.application.service.post;
 
+import com.edu.forum.application.model.filter.PostFilter;
+import com.edu.forum.application.util.Filters;
 import com.edu.forum.common.exception.AppException;
 import com.edu.forum.common.exception.InputInvalidException;
 import com.edu.forum.common.exception.PostNotFoundException;
@@ -12,6 +14,7 @@ import com.edu.forum.application.repository.PostRepository;
 import com.edu.forum.application.service.UserService;
 import com.edu.forum.application.service.category.ICategoryService;
 import com.edu.forum.application.util.Utils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,18 +28,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PostServiceImpl implements IPostService {
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private ICategoryService categoryService;
+    private final PostRepository postRepository;
+    private final UserService userService;
+    private final CommentRepository commentRepository;
+    private final ICategoryService categoryService;
 
     @Override
     public Iterable<Post> findAll() {
@@ -286,6 +283,19 @@ public class PostServiceImpl implements IPostService {
     public Iterable<Post> getTop5PostByUserId(Long currentPostId, Long userId) {
         Iterable<Post> posts = postRepository.getTop5PostByUserId(currentPostId, userId);
         return posts;
+    }
+
+    @Override
+    public Page<Post> getAllV2(PostFilter filter, Pageable pageable) {
+        int size = pageable.getPageSize();
+        int page = pageable.getPageNumber();
+        if (page >= 1) {
+            page = page - 1;
+        } else if (page < 0) {
+            page = 0;
+        }
+        Pageable pageDefault = PageRequest.of(page, size);
+        return postRepository.findAll(Filters.toSpecification(filter), pageDefault);
     }
 
     private void validateInput(Post post) throws InputInvalidException {

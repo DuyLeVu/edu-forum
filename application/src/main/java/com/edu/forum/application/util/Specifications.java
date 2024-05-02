@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
@@ -138,6 +139,17 @@ public class Specifications {
       subquery.select(builder.literal(1))
           .where(builder.equal(root.get(joinAttr), subRoot.get(joinSubAttr)), equals(attribute, value).toPredicate(subRoot, query, builder));
       return builder.exists(subquery);
+    };
+  }
+
+  public static <E, F, T> Specification<E> equalsJoin(SingularAttribute<E, F> joinAttr, Class<F> subEntity,
+                                                      SingularAttribute<F, T> attribute, T value) {
+    if (value == null) {
+      return null;
+    }
+    return (root, query, builder) -> {
+      Join<E, F> join = root.join(joinAttr);
+      return builder.equal(join.get(attribute), value);
     };
   }
 }

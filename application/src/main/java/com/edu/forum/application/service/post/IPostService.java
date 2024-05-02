@@ -2,6 +2,7 @@ package com.edu.forum.application.service.post;
 
 import com.edu.forum.application.model.entity.Comment;
 import com.edu.forum.application.model.entity.Post;
+import com.edu.forum.application.model.filter.PostFilter;
 import com.edu.forum.application.service.IGeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,4 +47,6 @@ public interface IPostService extends IGeneralService<Post> {
     Page<Post> getAllQuestion(Pageable pageable);
 
     Iterable<Post> getTop5PostByUserId(Long currentPostId, Long userId);
+
+    Page<Post> getAllV2(PostFilter filter, Pageable pageable);
 }

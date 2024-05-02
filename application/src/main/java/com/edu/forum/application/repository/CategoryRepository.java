@@ -1,12 +1,12 @@
 package com.edu.forum.application.repository;
 
 import com.edu.forum.application.model.entity.Category;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +22,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
             "on category.role_id = roles.id " +
             "where roles.id = 2", nativeQuery = true)
     Iterable<Category> getCategoryForUser();
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query(value = "select * from category c where c.id = :id", nativeQuery = true)
+    Optional<Category> getLockedCategory(Long id);
 }

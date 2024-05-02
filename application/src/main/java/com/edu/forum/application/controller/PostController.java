@@ -1,10 +1,11 @@
 package com.edu.forum.application.controller;
 
-import com.edu.forum.common.exception.AppException;
+import com.edu.forum.application.model.filter.PostFilter;
 import com.edu.forum.application.model.entity.Comment;
 import com.edu.forum.application.model.entity.Post;
 import com.edu.forum.application.service.UserService;
 import com.edu.forum.application.service.post.IPostService;
+import com.edu.forum.common.exception.AppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -184,5 +185,12 @@ public class PostController {
     public ResponseEntity<Long> countPostByCategoryId(@PathVariable Long id) {
         Long postByCategory = postService.countPostByCategoryId(id);
         return new ResponseEntity<>(postByCategory, HttpStatus.OK);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<Post>> findAll(PostFilter filter, Pageable pageable) {
+        Page<Post> posts = postService.getAllV2(filter, pageable);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 }

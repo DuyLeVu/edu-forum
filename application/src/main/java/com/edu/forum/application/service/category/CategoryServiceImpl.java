@@ -3,6 +3,7 @@ package com.edu.forum.application.service.category;
 import com.edu.forum.application.mapper.CreateCategoryRequest2EntityMapper;
 import com.edu.forum.application.mapper.Entity2CategoryResponseMapper;
 import com.edu.forum.application.mapper.Entity2CreateCategoryResponseMapper;
+import com.edu.forum.application.mapper.UpdateCategoryRequest2EntityMapper;
 import com.edu.forum.application.model.Role;
 import com.edu.forum.application.model.entity.Category;
 import com.edu.forum.application.model.filter.CategoryFilter;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -51,8 +53,13 @@ public class CategoryServiceImpl implements ICategoryService {
   }
 
   @Override
+  @Transactional
   public CategoryResponse update(UpdateCategoryRequest updateCategoryRequest) {
-    return null;
+    var id = updateCategoryRequest.getId();
+    var category = categoryRepository.findById(id)
+        .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND, "Category with id: " + id + " not found"));
+    UpdateCategoryRequest2EntityMapper.INSTANCE.mapTo(updateCategoryRequest, category);
+    return Entity2CategoryResponseMapper.INSTANCE.map(categoryRepository.save(category));
   }
 
   @Override
