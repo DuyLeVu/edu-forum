@@ -113,9 +113,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
   @Override
   public CreateCategoryResponse save(CreateCategoryRequest request) {
-//     {
-//    var isCategory = categoryRepository.findByName(request.getName());
-//    if (isCategory.isPresent() && request.getName().equalsIgnoreCase(isCategory.get().getName())) {
     if (categoryRepository.findByName(request.getName().trim()).isPresent()) {
       throw new BusinessException(ErrorCode.CATEGORY_ALREADY_EXISTS, "Category with name: "
       + request.getName() + " already exists");

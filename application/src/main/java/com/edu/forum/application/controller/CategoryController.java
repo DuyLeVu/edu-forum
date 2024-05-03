@@ -100,4 +100,11 @@ public class CategoryController {
                                              @RequestBody UpdateCategoryRequest request) {
         return Response.ofSucceeded(categoryService.update(request.setId(id)));
     }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("/{id}")
+    public Response<Void> delete(@Positive @PathVariable Long id) {
+        categoryService.remove(id);
+        return Response.ofSucceeded();
+    }
 }
