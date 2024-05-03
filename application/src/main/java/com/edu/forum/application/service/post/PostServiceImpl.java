@@ -1,21 +1,19 @@
 package com.edu.forum.application.service.post;
 
+import com.edu.forum.application.model.entity.*;
 import com.edu.forum.application.model.filter.PostFilter;
+import com.edu.forum.application.util.ErrorCode;
 import com.edu.forum.application.util.Filters;
 import com.edu.forum.common.exception.AppException;
+import com.edu.forum.common.exception.BusinessException;
 import com.edu.forum.common.exception.InputInvalidException;
 import com.edu.forum.common.exception.PostNotFoundException;
-import com.edu.forum.application.model.entity.Category;
-import com.edu.forum.application.model.entity.Comment;
-import com.edu.forum.application.model.entity.Post;
-import com.edu.forum.application.model.entity.User;
 import com.edu.forum.application.repository.CommentRepository;
 import com.edu.forum.application.repository.PostRepository;
 import com.edu.forum.application.service.UserService;
 import com.edu.forum.application.service.category.ICategoryService;
 import com.edu.forum.application.util.Utils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +24,9 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.edu.forum.application.model.Role.ROLE_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class PostServiceImpl implements IPostService {
         post.setCreateAt(date);
 //        post.setLikes((long) 0);
         postRepository.save(post);
-        if (post.getDescription().equals("1")) {
+        if (post.getDescription().equals("1") || post.getDescription().equals("3")) {
             User user = post.getUser();
             Long oldPosts = user.getPosts();
             oldPosts = oldPosts == null ? Long.valueOf(0) : oldPosts;
@@ -133,7 +134,17 @@ public class PostServiceImpl implements IPostService {
             page = 0;
         }
         Pageable pageDefault = PageRequest.of(page, size);
-        List<Post> posts = postRepository.findAllByUserId("1",userId, pageDefault.getOffset(), pageDefault.getPageSize());
+        var user = userService.findById(userId).orElseThrow(
+            () -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User with id: " + userId + " not found"));
+        final String[] des = {"1"};
+//        AtomicReference<String> description = new AtomicReference<>("1");
+        user.getRoles().forEach(role -> {
+            if (role.getName().equals(ROLE_ADMIN.name())) {
+//                description.set("3");
+                des[0] = "3";
+            }
+        });
+        List<Post> posts = postRepository.findAllByUserId(des[0], userId, pageDefault.getOffset(), pageDefault.getPageSize());
         Long coutListPostByUserId = postRepository.countListPostByUserId(userId, "1");
         return new PageImpl<>(posts, pageDefault, coutListPostByUserId);
     }

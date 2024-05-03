@@ -44,10 +44,10 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             "and description = ?1 " +
             "and user_id = ?2 order by id" +
             " Limit ?3,?4 ", nativeQuery = true)
-    List<Post> findAllByUserId(@Param("description") String description,@Param("id") Long id, @Param("startPage") Long startPage, @Param("pageSize") int pageSize);
+    List<Post> findAllByUserId(@Param("description") String description, @Param("id") Long id, @Param("startPage") Long startPage, @Param("pageSize") int pageSize);
 
     @Modifying
-    @Query(value = "select p.`id`, p.`content`, p.`create_at`, p.`description`, p.`detail`, p.`status`, p.`category_id`, p.`user_id`, p.`title`, p.`imgs` from `post` as p left join `user_role` as r on p.`user_id` = r.`user_id` where p.`status` = 1 and r.`role_id` = 1 order by p.`create_at` desc limit 4;", nativeQuery = true)
+    @Query(value = "select p.`id`, p.`content`, p.`create_at`, p.`description`, p.`detail`, p.`status`, p.`category_id`, p.`user_id`, p.`title`, p.`imgs` from `post` as p left join `user_role` as r on p.`user_id` = r.`user_id` where p.`description` = 3 and p.`status` = 1 and r.`role_id` = 1 order by p.`create_at` desc limit 4;", nativeQuery = true)
     List<Post> getTop4PostByAdmin();
 
     @Modifying

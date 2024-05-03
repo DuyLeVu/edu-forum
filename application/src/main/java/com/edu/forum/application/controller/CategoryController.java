@@ -107,4 +107,14 @@ public class CategoryController {
         categoryService.remove(id);
         return Response.ofSucceeded();
     }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/admin/noti")
+    public ResponseEntity<Iterable<Category>> getForAdmin() {
+        Iterable<Category> categories = categoryService.findAll();
+        if (categories == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
 }
