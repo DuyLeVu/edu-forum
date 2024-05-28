@@ -77,11 +77,12 @@ public class PostServiceImpl implements IPostService {
     @Override
     public void remove(Long id) {
         Optional<Post> post = postRepository.findById(id);
-        if (!post.isPresent()) {
+        if (post.isEmpty()) {
             throw new PostNotFoundException("Bài viết không tồn tại!");
         }
         post.get().setStatus(0);
         postRepository.save(post.get());
+        categoryService.updateCountPost(post.get().getCategory());
     }
 
     @Override

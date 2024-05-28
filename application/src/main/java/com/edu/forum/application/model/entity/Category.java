@@ -1,10 +1,15 @@
 package com.edu.forum.application.model.entity;
 
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "category")
+@Data
+@Accessors(chain = true)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,43 +38,43 @@ public class Category {
         this.countPost = countPost;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Long getCountPost() {
-        return countPost;
-    }
-
-    public void setCountPost(Long countPost) {
-        this.countPost = countPost;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
+//
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
+//
+//    public Long getCountPost() {
+//        return countPost;
+//    }
+//
+//    public void setCountPost(Long countPost) {
+//        this.countPost = countPost;
+//    }
 }

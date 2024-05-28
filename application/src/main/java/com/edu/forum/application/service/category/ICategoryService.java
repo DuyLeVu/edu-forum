@@ -15,6 +15,8 @@ import java.util.Optional;
 
 @Service
 public interface ICategoryService extends IGeneralService<Category> {
+    Category updateCountPost(Category category);
+
     Iterable<Category> findTop7Category();
 
     Page<Category> getAll(CategoryFilter filter, Pageable pageable);

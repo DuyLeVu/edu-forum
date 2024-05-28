@@ -63,6 +63,16 @@ public class CategoryServiceImpl implements ICategoryService {
   }
 
   @Override
+  public Category updateCountPost(Category category) {
+    var category1 = categoryRepository.findById(category.getId()).get();
+    category1.setName(category.getName())
+        .setRole(category.getRole())
+        .setCountPost(category1.getCountPost() - 1)
+        .setDescription(category.getDescription());
+    return categoryRepository.save(category1);
+  }
+
+  @Override
   public Category save(Category category) {
     return categoryRepository.save(category);
   }
